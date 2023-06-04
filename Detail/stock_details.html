@@ -1,0 +1,377 @@
+<!---
+    {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Reset default margin and padding for all elements */
+    body, h1, h2, p {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Set font styles for headings and paragraphs */
+    h1, h2, p {
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+
+    /* Add some spacing and center content */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Set a container for the form with padding and max-width */
+    form {
+      background-color: #f7f7f7;
+      padding: 30px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    /* Add some margin and style for form elements */
+    label, input[type="text"], input[type="submit"] {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    /* Style for submit button */
+    input[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    /* Style for error message */
+    .error {
+      color: red;
+    }
+
+    /* Add some margin for the result section */
+    .result {
+      margin-top: 20px;
+    }
+
+    /* Style for result section elements */
+    .result h2, .result p {
+      margin-bottom: 10px;
+    }
+
+    /* Style for link to Project 2 */
+    .project-link {
+      display: block;
+      margin-top: 20px;
+    }
+
+    /* Make the image responsive */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+    <h1>Stock Details</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="ticker">Enter Stock Ticker: </label>
+        <input type="text" id="ticker" name="ticker">
+        <input type="submit" value="Submit">
+    </form>
+    {% if ticker %}
+        <div class="result">
+            <h2>{{ ticker }} Details</h2>
+            <p>Stock Name: {{ stock_obj.name }}</p>
+            <p>Stock Price: {{ stock_obj.price }}</p>
+            <h2>{{ ticker }} Stock Growth (Last 10 Years)</h2>
+            <img src="{% static 'stock_growth.png' %}" alt="{{ ticker }} Stock Growth">
+        </div>
+    {% endif %}
+    <a href="{% url 'link_to_project2' %}" class="project-link">Go to Project 2</a>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
+
+--->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <div align="center">
+    <title>Stock Details</title>
+    </div>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #f8f8f8;
+      }
+  
+      h1 {
+          text-align: center;
+          color: #3498db;
+      }
+  
+      form {
+          text-align: center;
+          margin-top: 30px;
+      }
+  
+      input[type="text"] {
+          padding: 10px;
+          font-size: 18px;
+          border: none;
+          border-radius: 5px;
+          margin-right: 10px;
+      }
+  
+      #submit-button {
+          padding: 10px 20px;
+          font-size: 18px;
+          background-color: #3498db;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-top: 20px;
+      }
+  
+      #loading-spinner {
+          /* Set the spinner's size, color, and other styles */
+          /* Example styles */
+          width: 50px;
+          height: 50px;
+          top: 50%;
+          left: 50%;
+          position: absolute;
+          transform: translate(-50%, -50%);
+          border: 3px solid #f3f3f3;
+          border-top: 3px solid #3498db;
+          border-radius: 50%;
+          animation: spin 1s infinite linear;
+          z-index: 9999;
+          display: none;
+      }
+  
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+  
+      .error {
+          text-align: center;
+          color: #ff0000;
+      }
+  
+      .stock-details {
+          margin-top: 30px;
+          text-align: center;
+      }
+  
+      .stock-details h2 {
+          color: #3498db;
+      }
+  
+      .stock-history {
+          margin-top: 30px;
+          text-align: center;
+      }
+  
+      .stock-history h3 {
+          color: #3498db;
+      }
+  
+      .stock-history table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+  
+      .stock-history th,
+      .stock-history td {
+          padding: 8px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+      }
+  
+      .stock-dataset {
+          margin-top: 30px;
+          text-align: center;
+      }
+  
+      .stock-dataset h3 {
+          color: #3498db;
+      }
+  
+      .stock-dataset p {
+          padding: 10px;
+          background-color: #f3f3f3;
+          border-radius: 5px;
+      }
+  
+      .next-day-prediction {
+          margin-top: 30px;
+          text-align: center;
+      }
+  
+      .next-day-prediction h3 {
+          color: #3498db;
+      }
+  
+      .next-day-prediction p {
+          padding: 10px;
+          background-color: #f3f3f3;
+          border-radius: 5px;
+      }
+  
+      .next-day-prediction img {
+          max-width: 100%;
+          margin-top: 10px;
+      }
+      .styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    
+      margin-left: auto;
+      margin-right: auto;
+    
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+      </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!-- Include the Google Fonts CSS link -->
+
+</head>
+<body>
+    <div class="container">
+        <div align="center">
+        <h1>Stock Details</h1>
+        </div>
+        <br>
+        <br>
+        <form method="post">
+            {% csrf_token %}
+            <label for="ticker">Enter Stock Ticker: </label>
+            <input type="text" id="ticker" name="ticker">
+            <label for="ticker">Enter Stock Ticker 2: </label>
+            <input type="text" id="ticker1" name="ticker1">
+            <input type="submit" value="Submit" id="submit-button">
+        </form>
+        <br>
+        <br>
+        {% if ticker %}
+            <div class="stock-details">
+                <div align="center">
+                <h2>{{ ticker }} Details</h2></div>
+                <p><b>Stock Name: </b> {{ stock_obj.name }}</p>
+                <p><b>Stock Price: </b> {{ stock_obj.price }}</p>
+                <p><b>Stock Description: </b> {{ stock_obj.description }}</p>
+                <br>
+        <br><div align="center">
+                
+         </div>
+        {% endif %}
+
+        <br>
+        {% if ticker1 %}
+            <div class="stock-details">
+                <div align="center">
+                <h2>{{ ticker1 }} Details</h2></div>
+                <p><b>Stock Name: </b> {{ stock_obj1.name }}</p>
+                <p><b>Stock Price: </b> {{ stock_obj1.price }}</p>
+                <p><b>Stock Description: </b> {{ stock_obj1.description }}</p>
+                <br>
+        <br><div align="center">
+                <h2>Stock Comparison (Last 10 Years)</h2></div>
+                <br>
+        <br>
+                <img src="{% static 'stock_comp.png' %}" alt="{{ ticker1 }} Stock Growth">
+            </div>
+        {% endif %}
+    </div>
+    {% if ticker %}
+    <div class="stock-details"></div>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{{ stock_obj.name }}</th>
+                <th>{{ stock_obj1.name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ticker</td>
+                <td>{{ ticker }}</td>
+                <td>{{ ticker1 }}</td>
+            </tr>
+            <tr class="active-row">
+                <td>Price</td>
+                <td>{{ stock_obj.price }}</td>
+                <td>{{stock_obj1.price}}</td>
+            </tr>
+            <tr>
+                <td>Daily High</td>
+                <td>{{ stock_obj.high }}</td>
+                <td>{{ stock_obj1.high }}</td>
+            </tr>
+            <tr class="active-row">
+                <td>Daily Low</td>
+                <td>{{ stock_obj.low }}</td>
+                <td>{{stock_obj1.low}}</td>
+            </tr>
+            <tr>
+                <td>Dividend Yield</td>
+                <td>{{ stock_obj.div }}</td>
+                <td>{{ stock_obj1.div}}</td>
+            </tr>
+            <tr class="active-row">
+                <td>Trailing PE</td>
+                <td>{{ stock_obj.pe }}</td>
+                <td>{{stock_obj1.pe}}</td>
+            </tr>
+            <tr>
+                <td>Market Cap</td>
+                <td>{{ stock_obj.cap}}</td>
+                <td>{{ stock_obj1.cap}}</td>
+            </tr>
+            <!-- and so on... -->
+        </tbody>
+    </table>
+    {% endif %}
+    </div>
+</body>
+</html>

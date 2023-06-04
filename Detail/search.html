@@ -1,0 +1,9 @@
+<!-- analysis/search.html -->
+
+<h1>Stock Analysis</h1>
+<form method="post" action="{% url 'stock_details' %}">
+  {% csrf_token %}
+  <input type="text" name="symbol" placeholder="Enter Stock Ticker">
+  <input type="text" name="symbol2" placeholder="Enter Stock Ticker">
+  <button type="submit">Search</button>
+</form>
